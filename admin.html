@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel | Dress by Diya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green: #1a4731;
+      --gold: #c9a96e;
+      --cream: #fdf8f3;
+      --cream-dark: #f5ece0;
+      --brown: #2c1810;
+      --text-muted: #6b5040;
+      --white: #ffffff;
+      --red: #c0392b;
+      --success: #27ae60;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f0ebe4; font-family: 'Lato', sans-serif; color: var(--brown); min-height: 100vh; }
+
+    /* LOGIN */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-box {
+      background: var(--white);
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(44,24,16,0.08);
+    }
+    .login-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      color: var(--green);
+      margin-bottom: 0.25rem;
+    }
+    .login-sub {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+    .login-box h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      color: var(--brown);
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(201,169,110,0.4);
+      background: var(--cream);
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      color: var(--brown);
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+    .login-input:focus { border-color: var(--green); }
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .login-btn:hover { opacity: 0.85; }
+    .login-error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    /* ADMIN */
+    .admin-screen { display: none; }
+    .admin-header {
+      background: var(--green);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-header-brand {
+      font-family: 'Cinzel', serif;
+      color: var(--cream);
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+    .admin-header-brand span { color: var(--gold); }
+    .logout-btn {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(253,248,243,0.6);
+      background: none;
+      border: 1px solid rgba(253,248,243,0.2);
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { color: var(--cream); border-color: var(--cream); }
+
+    .admin-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 2rem;
+    }
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(201,169,110,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-title span { color: var(--gold); }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid rgba(201,169,110,0.35);
+      background: var(--cream);
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      color: var(--brown);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-select { cursor: pointer; }
+
+    .radio-group { display: flex; gap: 1rem; margin-top: 0.25rem; }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 14px;
+      color: var(--brown);
+      cursor: pointer;
+    }
+    .radio-label input { accent-color: var(--green); }
+
+    .imgbb-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+    .imgbb-hint a { color: var(--gold); text-decoration: underline; }
+
+    .generate-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 0.5rem;
+    }
+    .generate-btn:hover { opacity: 0.85; }
+
+    /* OUTPUT PANEL */
+    .output-panel { position: sticky; top: 1rem; }
+    .step-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .step-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      min-width: 28px;
+      height: 28px;
+      background: var(--green);
+      color: var(--cream);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+    .step-text strong { color: var(--brown); }
+    .step-text a { color: var(--gold); text-decoration: underline; }
+
+    .code-block {
+      background: #1e1e1e;
+      border-radius: 4px;
+      padding: 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #d4d4d4;
+      overflow-x: auto;
+      white-space: pre;
+      min-height: 120px;
+      position: relative;
+    }
+    .code-block .c-green { color: #6a9955; }
+    .code-block .c-gold { color: #ce9178; }
+    .code-block .c-blue { color: #9cdcfe; }
+    .code-block .c-num { color: #b5cea8; }
+    .code-placeholder {
+      color: #555;
+      font-style: italic;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 11px;
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--green);
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.75rem;
+    }
+    .copy-btn:hover { background: var(--green); color: var(--cream); }
+    .copy-btn.copied { background: var(--success); border-color: var(--success); color: white; }
+
+    .github-steps {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(201,169,110,0.2);
+    }
+    .github-steps h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    /* Preview card */
+    .preview-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(201,169,110,0.2);
+    }
+    .preview-section h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+    .preview-card {
+      border: 1px solid rgba(201,169,110,0.2);
+      overflow: hidden;
+      display: none;
+    }
+    .preview-card.visible { display: block; }
+    .preview-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      background: var(--cream-dark);
+    }
+    .preview-img-placeholder {
+      width: 100%;
+      height: 180px;
+      background: var(--cream-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(201,169,110,0.5);
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .preview-body { padding: 1rem; background: white; }
+    .preview-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--green); font-weight: 600; }
+    .preview-desc { font-size: 13px; color: var(--text-muted); margin: 0.3rem 0 0.75rem; line-height: 1.5; }
+    .preview-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--brown); }
+
+    @media (max-width: 700px) {
+      .admin-body { grid-template-columns: 1fr; }
+      .output-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Dress by Diya</div>
+    <div class="login-sub">Admin Panel</div>
+    <h2>Enter Password to Continue</h2>
+    <input type="password" class="login-input" id="password-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') checkPassword()"/>
+    <button class="login-btn" onclick="checkPassword()">Enter</button>
+    <p class="login-error" id="login-error">Incorrect password. Try again.</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:1.5rem;">Default password: <strong>diya2025</strong><br/>Change it in the admin.html file.</p>
+  </div>
+</div>
+
+<!-- ===== ADMIN ===== -->
+<div class="admin-screen" id="admin-screen">
+
+  <div class="admin-header">
+    <div class="admin-header-brand">Dress by Diya <span>✦</span> Admin</div>
+    <button class="logout-btn" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- FORM PANEL -->
+    <div class="panel">
+      <div class="panel-title"><span>✦</span> Add New Dress</div>
+
+      <div class="form-group">
+        <label class="form-label">Dress Name *</label>
+        <input type="text" class="form-input" id="f-name" placeholder="e.g. Pink Lawn Suit" oninput="updatePreview()"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" id="f-category" onchange="updatePreview()">
+          <option value="formal">Formal</option>
+          <option value="casual">Casual</option>
+          <option value="lawn">Lawn</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Price (PKR) *</label>
+        <input type="number" class="form-input" id="f-price" placeholder="e.g. 3500" oninput="updatePreview()"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="f-desc" placeholder="e.g. Beautiful 3-piece lawn suit with floral print. Available in all sizes." oninput="updatePreview()"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Photo Link (from imgbb.com)</label>
+        <input type="text" class="form-input" id="f-image" placeholder="https://i.ibb.co/xxxxx/photo.jpg" oninput="updatePreview()"/>
+        <p class="imgbb-hint">Upload photo at <a href="https://imgbb.com" target="_blank">imgbb.com</a> → copy "Direct Link" → paste above</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Availability</label>
+        <div class="radio-group">
+          <label class="radio-label"><input type="radio" name="available" value="true" checked onchange="updatePreview()"/> Available</label>
+          <label class="radio-label"><input type="radio" name="available" value="false" onchange="updatePreview()"/> Sold Out</label>
+        </div>
+      </div>
+
+      <button class="generate-btn" onclick="generateCode()">Generate Code Block ✦</button>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="panel output-panel">
+      <div class="panel-title"><span>✦</span> Your Code Block</div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Fill the form and click <strong>Generate Code Block</strong></div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">Click <strong>Copy Code</strong> below</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">Go to your GitHub repo → open <strong>js/shop.js</strong> → click the ✏️ pencil icon</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-text">Find the line <strong>const PRODUCTS = [</strong> and paste your code right after it</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-text">Click <strong>Commit changes</strong> — your dress is live! 🎉</div>
+        </div>
+      </div>
+
+      <div class="code-block" id="code-output"><span class="code-placeholder">// Fill the form and click Generate...</span></div>
+      <button class="copy-btn" id="copy-btn" onclick="copyCode()">Copy Code</button>
+
+      <!-- Preview -->
+      <div class="preview-section">
+        <h4>Live Preview</h4>
+        <div class="preview-card" id="preview-card">
+          <div id="preview-img-wrap">
+            <div class="preview-img-placeholder">No photo yet</div>
+          </div>
+          <div class="preview-body">
+            <div class="preview-name" id="preview-name">Dress Name</div>
+            <div class="preview-desc" id="preview-desc">Description will appear here</div>
+            <div class="preview-price" id="preview-price">PKR 0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CHANGE PASSWORD HERE ──────────────────────────
+  const ADMIN_PASSWORD = "diya2025";
+  // ─────────────────────────────────────────────────
+
+  function checkPassword() {
+    const val = document.getElementById('password-input').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('password-input').value = '';
+    }
+  }
+
+  function logout() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('password-input').value = '';
+  }
+
+  // Get next available ID by reading existing products (simple increment)
+  function getNextId() {
+    return Math.floor(Date.now() / 1000) % 100000;
+  }
+
+  function generateCode() {
+    const name = document.getElementById('f-name').value.trim();
+    const category = document.getElementById('f-category').value;
+    const price = document.getElementById('f-price').value.trim();
+    const desc = document.getElementById('f-desc').value.trim();
+    const image = document.getElementById('f-image').value.trim();
+    const available = document.querySelector('input[name="available"]:checked').value;
+
+    if (!name || !price) {
+      alert('Please fill in at least the Dress Name and Price.');
+      return;
+    }
+
+    const id = getNextId();
+
+    const block = `  {
+    id: ${id},
+    name: "${name}",
+    category: "${category}",
+    price: ${price},
+    description: "${desc || 'Available in custom colors and sizes.'}",
+    image: "${image}",
+    available: ${available},
+  },`;
+
+    const out = document.getElementById('code-output');
+    out.innerHTML =
+      `  {\n` +
+      `    <span class="c-blue">id</span>: <span class="c-num">${id}</span>,\n` +
+      `    <span class="c-blue">name</span>: <span class="c-gold">"${name}"</span>,\n` +
+      `    <span class="c-blue">category</span>: <span class="c-gold">"${category}"</span>,\n` +
+      `    <span class="c-blue">price</span>: <span class="c-num">${price}</span>,\n` +
+      `    <span class="c-blue">description</span>: <span class="c-gold">"${desc || 'Available in custom colors and sizes.'}"</span>,\n` +
+      `    <span class="c-blue">image</span>: <span class="c-gold">"${image}"</span>,\n` +
+      `    <span class="c-blue">available</span>: <span class="c-num">${available}</span>,\n` +
+      `  },`;
+
+    out._rawText = block;
+
+    const copyBtn = document.getElementById('copy-btn');
+    copyBtn.classList.remove('copied');
+    copyBtn.textContent = 'Copy Code';
+  }
+
+  function copyCode() {
+    const out = document.getElementById('code-output');
+    const text = out._rawText;
+    if (!text) { alert('Generate the code first!'); return; }
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy Code'; btn.classList.remove('copied'); }, 2500);
+    });
+  }
+
+  function updatePreview() {
+    const name = document.getElementById('f-name').value || 'Dress Name';
+    const price = document.getElementById('f-price').value || '0';
+    const desc = document.getElementById('f-desc').value || 'Description will appear here';
+    const image = document.getElementById('f-image').value.trim();
+
+    document.getElementById('preview-name').textContent = name;
+    document.getElementById('preview-desc').textContent = desc;
+    document.getElementById('preview-price').textContent = 'PKR ' + Number(price).toLocaleString();
+    document.getElementById('preview-card').classList.add('visible');
+
+    const wrap = document.getElementById('preview-img-wrap');
+    if (image) {
+      wrap.innerHTML = `<img src="${image}" class="preview-img" alt="preview" onerror="this.parentNode.innerHTML='<div class=\\'preview-img-placeholder\\'>Image not found</div>'"/>`;
+    } else {
+      wrap.innerHTML = `<div class="preview-img-placeholder">No photo yet</div>`;
+    }
+  }
+</script>
+
+</body>
+</html>
